@@ -27,7 +27,7 @@ def strategy(trader: shift.Trader, ticker: str, endtime):
     tick_size = 0.01
     num_levels = 10
     transaction_cost = 0.001 # 0.003-0.002
-    check_freq = 0.25 # in second
+    check_freq = 1 # in second
     order_size = 1  # NOTE: this is 1 lots which is 100 shares.
 
     i=10
