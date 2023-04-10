@@ -10,11 +10,22 @@ from threading import Thread
 from actions import *
 
 
+
 '''
 Beginning Account Balances: $1,000,000.00.
 Shares can only be traded in lots of 100.
 A rebate of 0.002 per share will be paid for executed limit orders, at the end of each competition day.
 A fee of 0.003 per share will be charged for executed market orders, at the end of each competition day.
+'''
+
+
+'''
+Siyan 04.10.23
+# 订单管理
+# 止损管理
+# log日志
+# 归因分析
+# 利用MACD，adx指标过滤行情（这不就是技术分析）
 '''
 
 def strategy(trader: shift.Trader, ticker: str, endtime):
@@ -27,7 +38,7 @@ def strategy(trader: shift.Trader, ticker: str, endtime):
     tick_size = 0.01
     num_levels = 10
     transaction_cost = 0.001 # 0.003-0.002
-    check_freq = 0.25 # in second
+    check_freq = 1 # in second
     order_size = 1  # NOTE: this is 1 lots which is 100 shares.
 
     i=10
