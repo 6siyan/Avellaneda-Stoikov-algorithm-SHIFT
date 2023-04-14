@@ -69,5 +69,4 @@ if __name__ == '__main__':
         sleep(1)
         trader.sub_all_order_book()
         sleep(1)
-
         main(trader)
