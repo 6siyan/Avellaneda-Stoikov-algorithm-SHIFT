@@ -24,7 +24,7 @@ Siyan 04.10.23
 # 止损管理
 # log日志
 # 归因分析
-# 利用MACD，adx指标过滤行情（这不就是技术分析）
+# 利用MACD，adx指标过滤行情
 '''
 
 def get_Reservation_price(midprice, order_size, T_t):
