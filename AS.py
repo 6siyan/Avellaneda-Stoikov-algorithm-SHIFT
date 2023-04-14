@@ -97,11 +97,11 @@ def strategy(trader: shift.Trader, ticker: str, current, starttime, endtime):
     tick_size = 0.01
     num_levels = 10
     transaction_cost = 0.001 # 0.003-0.002
-    check_freq = 0.1 # in second
+    check_freq = 10 # in second
     order_size = 1  # NOTE: this is 1 lots which is 100 shares.
     T_t = (endtime - current)/(endtime-starttime)
     print(T_t)
-    i=10
+    i=1000
     #while (trader.get_last_trade_time() < endtime):
     while (i):
         i-=1
@@ -138,23 +138,23 @@ def strategy(trader: shift.Trader, ticker: str, current, starttime, endtime):
         sleep(check_freq)
 
     # cancel unfilled orders and close positions for this ticker
-    print(
-    "Symbol\t\t\t\tType\t  Price\t\tSize\tExecuted\tID\t\t\t\t\t\t\t\t\t\t\t\t\t\t Status\t\tTimestamp"
-    )
-    for order in trader.get_waiting_list():
-        print(
-            "%6s\t%16s\t%7.2f\t\t%4d\t\t%4d\t%36s\t%23s\t\t%26s"
-            % (
-                order.symbol,
-                order.type,
-                order.price,
-                order.size,
-                order.executed_size,
-                order.id,
-                order.status,
-                order.timestamp,
-            )
-        )
+    # print(
+    # "Symbol\t\t\t\tType\t  Price\t\tSize\tExecuted\tID\t\t\t\t\t\t\t\t\t\t\t\t\t\t Status\t\tTimestamp"
+    # )
+    # for order in trader.get_waiting_list():
+    #     print(
+    #         "%6s\t%16s\t%7.2f\t\t%4d\t\t%4d\t%36s\t%23s\t\t%26s"
+    #         % (
+    #             order.symbol,
+    #             order.type,
+    #             order.price,
+    #             order.size,
+    #             order.executed_size,
+    #             order.id,
+    #             order.status,
+    #             order.timestamp,
+    #         )
+    #     )
 
 
     actions.cancel_orders(trader, ticker)
@@ -162,16 +162,16 @@ def strategy(trader: shift.Trader, ticker: str, current, starttime, endtime):
 
 
 
-    print("Buying Power\tTotal Shares\tTotal P&L\tTimestamp")
-    print(
-        "%12.2f\t%12d\t%9.2f\t%26s"
-        % (
-            trader.get_portfolio_summary().get_total_bp(),
-            trader.get_portfolio_summary().get_total_shares(),
-            trader.get_portfolio_summary().get_total_realized_pl(),
-            trader.get_portfolio_summary().get_timestamp(),
-        )
-    )
+    # print("Buying Power\tTotal Shares\tTotal P&L\tTimestamp")
+    # print(
+    #     "%12.2f\t%12d\t%9.2f\t%26s"
+    #     % (
+    #         trader.get_portfolio_summary().get_total_bp(),
+    #         trader.get_portfolio_summary().get_total_shares(),
+    #         trader.get_portfolio_summary().get_total_realized_pl(),
+    #         trader.get_portfolio_summary().get_timestamp(),
+    #     )
+    # )
 
     print(
         f"total profits/losses for {ticker}: {trader.get_portfolio_item(ticker).get_realized_pl() - initial_pl}")
