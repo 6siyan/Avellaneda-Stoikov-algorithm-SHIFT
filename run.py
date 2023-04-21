@@ -14,8 +14,8 @@ def main(trader):
     # keeps track of times for the simulation
     check_frequency = 60
     current = trader.get_last_trade_time()
-    start_time = datetime.combine(current, dt.time(9, 30, 0))
-    end_time = datetime.combine(current, dt.time(15, 50, 0))
+    start_time = datetime.combine(current, dt.time(9, 35, 0))
+    end_time = datetime.combine(current, dt.time(15, 45, 0))
     #start_time = current
     #end_time = start_time + timedelta(minutes=1)
 
@@ -29,7 +29,7 @@ def main(trader):
     threads = []
 
     # in this example, we simultaneously and independantly run our trading alogirthm on two tickers
-    tickers = ['NKE']
+    tickers = ['NKE', 'AAPL', 'MSFT', 'AMZN']
 
     print("START")
 
