@@ -50,11 +50,15 @@ def get_Reservation_price(midprice, order_size, T_t):
 
     '''
     # The Wiener process parameter.
-    sigma = 2
+    #sigma = 2
     # Risk factor (->0: high risk, ->1: low risk)
-    gamma = 0.1
+    #gamma = 0.1
     # Market model
-    k = 10
+    #k = 10
+
+    sigma = 2
+    gamma = 0.1
+    k = 100
 
     reservation_price = midprice - order_size * gamma * sigma**2 * (T_t)
     return reservation_price
@@ -79,7 +83,7 @@ def get_Optimal_bid_ask_spread(T_t):
 
     sigma = 2
     gamma = 0.1
-    k = 10
+    k = 100
 
     spread = gamma * sigma**2 * (T_t) +  (2 / gamma) * np.log(1 + (gamma / k))
     spread /= 2
@@ -98,10 +102,10 @@ def strategy(trader: shift.Trader, ticker: str, current, starttime, endtime):
     num_levels = 10
     transaction_cost = 0.001 # 0.003-0.002
     check_freq = 10 # in second
-    order_size = 1  # NOTE: this is 1 lots which is 100 shares.
+    order_size = 2  # NOTE: this is 1 lots which is 100 shares.
     T_t = (endtime - current)/(endtime-starttime)
     print(T_t)
-    i=1000
+    i=5000
     #while (trader.get_last_trade_time() < endtime):
     while (i):
         i-=1
@@ -115,16 +119,29 @@ def strategy(trader: shift.Trader, ticker: str, current, starttime, endtime):
         best_bid = best_price.get_bid_price()
         best_ask = best_price.get_ask_price()
         midprice = (best_bid + best_ask) / 2
+
+
         reservation_price = get_Reservation_price(midprice, order_size, T_t)
         spread = get_Optimal_bid_ask_spread(T_t)
+        # if reservation_price >= midprice:
+        #     ask_spread = spread + (reservation_price - midprice)
+        #     bid_spread = spread - (reservation_price - midprice)
+        # else:
+        #     ask_spread = spread - (midprice - reservation_price)
+        #     bid_spread = spread + (midprice - reservation_price)
+
         if reservation_price >= midprice:
             ask_spread = spread + (reservation_price - midprice)
             bid_spread = spread - (reservation_price - midprice)
         else:
             ask_spread = spread - (midprice - reservation_price)
             bid_spread = spread + (midprice - reservation_price)
+
+            
+
+        print(reservation_price)
         print(f"ask_spread{ask_spread}, bid_spread{bid_spread}")
-        limit_buy = shift.Order(shift.Order.Type.LIMIT_BUY, ticker, order_size, best_bid-bid_spread)
+        limit_buy = shift.Order(shift.Order.Type.LIMIT_BUY, ticker, order_size, best_bid+bid_spread)
         print(f"ticker: {ticker}, type: {limit_buy.type}, price: {best_bid-bid_spread}, best_bid{best_bid} ")
         trader.submit_order(limit_buy)
 
@@ -138,23 +155,23 @@ def strategy(trader: shift.Trader, ticker: str, current, starttime, endtime):
         sleep(check_freq)
 
     # cancel unfilled orders and close positions for this ticker
-    # print(
-    # "Symbol\t\t\t\tType\t  Price\t\tSize\tExecuted\tID\t\t\t\t\t\t\t\t\t\t\t\t\t\t Status\t\tTimestamp"
-    # )
-    # for order in trader.get_waiting_list():
-    #     print(
-    #         "%6s\t%16s\t%7.2f\t\t%4d\t\t%4d\t%36s\t%23s\t\t%26s"
-    #         % (
-    #             order.symbol,
-    #             order.type,
-    #             order.price,
-    #             order.size,
-    #             order.executed_size,
-    #             order.id,
-    #             order.status,
-    #             order.timestamp,
-    #         )
-    #     )
+    print(
+    "Symbol\t\t\t\tType\t  Price\t\tSize\tExecuted\tID\t\t\t\t\t\t\t\t\t\t\t\t\t\t Status\t\tTimestamp"
+    )
+    for order in trader.get_waiting_list():
+        print(
+            "%6s\t%16s\t%7.2f\t\t%4d\t\t%4d\t%36s\t%23s\t\t%26s"
+            % (
+                order.symbol,
+                order.type,
+                order.price,
+                order.size,
+                order.executed_size,
+                order.id,
+                order.status,
+                order.timestamp,
+            )
+        )
 
 
     actions.cancel_orders(trader, ticker)
@@ -162,20 +179,16 @@ def strategy(trader: shift.Trader, ticker: str, current, starttime, endtime):
 
 
 
-    # print("Buying Power\tTotal Shares\tTotal P&L\tTimestamp")
-    # print(
-    #     "%12.2f\t%12d\t%9.2f\t%26s"
-    #     % (
-    #         trader.get_portfolio_summary().get_total_bp(),
-    #         trader.get_portfolio_summary().get_total_shares(),
-    #         trader.get_portfolio_summary().get_total_realized_pl(),
-    #         trader.get_portfolio_summary().get_timestamp(),
-    #     )
-    # )
+    print("Buying Power\tTotal Shares\tTotal P&L\tTimestamp")
+    print(
+        "%12.2f\t%12d\t%9.2f\t%26s"
+        % (
+            trader.get_portfolio_summary().get_total_bp(),
+            trader.get_portfolio_summary().get_total_shares(),
+            trader.get_portfolio_summary().get_total_realized_pl(),
+            trader.get_portfolio_summary().get_timestamp(),
+        )
+    )
 
     print(
         f"total profits/losses for {ticker}: {trader.get_portfolio_item(ticker).get_realized_pl() - initial_pl}")
-
-    
-
-
