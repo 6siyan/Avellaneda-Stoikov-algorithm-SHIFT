@@ -105,7 +105,7 @@ def strategy(trader: shift.Trader, ticker: str, current, starttime, endtime):
     order_size = 2  # NOTE: this is 1 lots which is 100 shares.
     T_t = (endtime - current)/(endtime-starttime)
     print(T_t)
-    i=5000
+    i=1000
     #while (trader.get_last_trade_time() < endtime):
     while (i):
         i-=1
